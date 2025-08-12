@@ -1,0 +1,164 @@
+ <!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇮🇳 देशभक्ति क्विज़ 🇮🇳</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* घूमता हुआ अशोक चक्र */
+#ashokChakra {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/1/17/Ashoka_Chakra.svg') no-repeat center/contain;
+  transform: translate(-50%, -50%);
+  animation: spin 10s linear infinite;
+  opacity: 0.15;
+  z-index: -1;
+}
+
+@keyframes spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.9);
+  max-width: 500px;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+h1 {
+  color: #ff6600;
+}
+
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.options button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #eee;
+}
+
+.options button:hover {
+  background: #ddd;
+}
+
+.result {
+  display: none;
+}
+
+.correct-bg {
+  background: linear-gradient(45deg, #FF9933, #FFFFFF, #138808);
+  transition: background 0.5s ease;
+}
+
+.wrong-bg {
+  background: rgba(255,0,0,0.4);
+  transition: background 0.5s ease;
+}
+</style>
+</head>
+<body>
+
+<!-- घूमता हुआ अशोक चक्र -->
+<div id="ashokChakra"></div>
+
+<!-- म्यूजिक -->
+<audio id="bgMusic" loop autoplay>
+  <source src="vande_mataram.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container" id="quizContainer">
+  <h1>🇮🇳 देशभक्ति क्विज़ 🇮🇳</h1>
+  <div id="quiz">
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+  </div>
+  <div class="result" id="result">
+    <h2>क्विज़ पूरा हुआ!</h2>
+    <p id="score"></p>
+    <h3>🇮🇳 जय हिंद! 🇮🇳</h3>
+  </div>
+</div>
+
+<script>
+const questions = [
+  { q: "भारत का स्वतंत्रता दिवस कब मनाया जाता है?", options: ["15 अगस्त", "26 जनवरी", "2 अक्टूबर", "14 नवम्बर"], answer: 0 },
+  { q: "अशोक चक्र में कितनी तीलियां होती हैं?", options: ["12", "18", "24", "36"], answer: 2 },
+  { q: "‘जन गण मन’ के रचयिता कौन हैं?", options: ["महात्मा गांधी", "रवीन्द्रनाथ टैगोर", "जवाहरलाल नेहरू", "सुभाष चंद्र बोस"], answer: 1 },
+  { q: "स्वतंत्र भारत के पहले प्रधानमंत्री कौन थे?", options: ["लाल बहादुर शास्त्री", "जवाहरलाल नेहरू", "राजेन्द्र प्रसाद", "इंदिरा गांधी"], answer: 1 }
+];
+
+let currentIndex = 0;
+let score = 0;
+
+function loadQuestion() {
+  let q = questions[currentIndex];
+  document.getElementById("question").innerText = q.q;
+  let optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+  q.options.forEach((opt, i) => {
+    let btn = document.createElement("button");
+    btn.innerText = opt;
+    btn.onclick = () => checkAnswer(i);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected) {
+  let correct = questions[currentIndex].answer;
+  if (selected === correct) {
+    score++;
+    document.body.classList.add("correct-bg");
+  } else {
+    document.body.classList.add("wrong-bg");
+  }
+
+  // Disable all buttons
+  document.querySelectorAll("#options button").forEach(btn => btn.disabled = true);
+
+  // अगले सवाल पर ऑटो जाए
+  setTimeout(() => {
+    document.body.classList.remove("correct-bg", "wrong-bg");
+    currentIndex++;
+    if (currentIndex < questions.length) {
+      loadQuestion();
+    } else {
+      showResult();
+    }
+  }, 2000);
+}
+
+function showResult() {
+  document.getElementById("quiz").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("score").innerText = `आपका स्कोर: ${score} / ${questions.length}`;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>    
